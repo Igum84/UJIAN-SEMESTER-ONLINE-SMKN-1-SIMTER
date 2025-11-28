@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ujian Semester Online - Pilih Kelas</title>
+
+<style>
+  :root {
+    --primary: #0057d8;
+    --primary-dark: #003f9e;
+    --bg: #f2f6ff;
+    --text-dark: #0a1a33;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", Arial, sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* NAVBAR */
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .navbar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+
+  .navbar h1 {
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    flex: 1;
+    margin: 0 10px;
+  }
+
+  .login-icon {
+    font-size: 26px;
+    cursor: pointer;
+  }
+
+  /* MAIN TITLE */
+  .main-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 22px 10px;
+  }
+
+  /* WAKTU */
+  .time-container {
+    text-align: center;
+    margin: 20px 0 0;
+    color: var(--text-dark);
+  }
+
+  #current-date {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  #current-time {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-top: 2px;
+  }
+
+  /* PANDUAN CONTAINER */
+  .guide-container {
+    margin: 15px;
+    background: #b40303;
+    padding: 18px;
+    border-radius: 14px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  }
+
+  .guide-container h2 {
+    font-size: 18px;
+    margin-bottom: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    text-align: center;
+  }
+  
+  .guide-container ol {
+    padding-left: 25px; /* Memberi jarak untuk nomor list */
+    font-size: 15px;
+    color: #ffffff;
+  }
+
+  /* CAROUSEL */
+  .carousel {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 10px;
+  }
+
+  .carousel-inner {
+    display: flex;
+    width: 400%; /* 100% * 4 images */
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .carousel-item {
+    width: 25%; /* 100% / 4 images */
+    flex-shrink: 0;
+    position: relative; /* Diperlukan untuk posisi caption */
+  }
+
+  .carousel-item img {
+    width: 100%;
+    height: auto; /* Biarkan tinggi gambar menyesuaikan secara otomatis */
+    display: block;
+    background-color: #eb2121; /* Latar belakang jika rasio aspek beda */
+    transition: filter 0.3s ease-in-out; /* Transisi untuk efek redup */
+  }
+
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0; /* Sembunyikan secara default */
+    transition: opacity 0.3s ease, background-color 0.2s;
+  }
+
+  .carousel-btn:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+
+  /* Tampilkan tombol saat hover di area carousel */
+  .carousel:hover .carousel-btn {
+    opacity: 1;
+  }
+
+  .carousel-btn.prev { left: 10px; }
+  .carousel-btn.next { right: 10px; }
+
+  .carousel-caption {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* background-color: rgba(0, 0, 0, 0.5); Dihapus */
+    color: white;
+    padding: 12px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    opacity: 0; /* Sembunyikan secara default */
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: none; /* Agar tidak mengganggu hover */
+    z-index: 5;
+  }
+
+  /* Efek saat hover di item carousel */
+  .carousel-item:hover .carousel-caption {
+    opacity: 1; /* Tampilkan caption */
+  }
+  .carousel-item:hover img {
+    filter: brightness(50%); /* Redupkan gambar */
+  }
+
+  .carousel-indicators {
+    position: absolute;
+    bottom: 15px; /* Sesuaikan posisi agar tidak terlalu dekat caption */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 15;
+    display: flex;
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+
+  .indicator-btn {
+    background-color: #fff;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0 5px;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+  }
+
+  .indicator-btn.active {
+    opacity: 1;
+  }
+
+  /* CONTAINER */
+  .container {
+    margin: 15px;
+    background: rgb(155, 226, 214);
+    padding: 18px;
+    border-radius: 14px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  }
+
+  .container h2 {
+    font-size: 18px;
+    margin-bottom: 14px;
+    font-weight: 600;
+    color: rgb(7, 46, 39);
+    text-align: center;
+  }
+
+  /* GRID */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* CARD */
+  .card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: 0.25s;
+  }
+
+  .card-schedule {
+    padding: 8px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    background-color: #e9ecef;
+    color: var(--text-dark);
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+  }
+
+  .card img {
+    width: 100%;
+    height: 115px;
+    object-fit: cover;
+  }
+
+  .card p {
+    text-align: center;
+    padding: 10px;
+    font-size: 15px;
+    color: var(--text-dark);
+    font-weight: 600;
+  }
+
+  /* FOOTER */
+  .footer {
+    margin-top: auto; /* Mendorong footer ke bawah */
+    background: #000000;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .footer p { margin: 4px 0; }
+
+  /* RESPONSIVE BREAKPOINTS */
+  @media (max-width: 450px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+    .navbar h1 {
+      font-size: 13px;
+    }
+    .main-title {
+      font-size: 20px;
+    }
+    .carousel-item img {
+      object-fit: contain; /* Pastikan gambar utuh */
+    }
+  }
+
+  /* TOMBOL KEMBALI */
+  .back-button-container {
+    margin: 20px 15px; /* top/bottom right/left */
+    text-align: center;
+  }
+
+  .back-button {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #00013f; /* Warna abu-abu sekunder */
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+  }
+  .back-button:hover {
+    background-color: #5ac805;
+  }
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <img src="logo.jpg" alt="Logo">
+  <h1>SMKN 1 SIMPANG TERITIP</h1>
+  <div class="login-icon">🔐</div>
+</div>
+
+<!-- WAKTU -->
+<div class="time-container">
+  <div id="current-date"></div>
+  <div id="current-time"></div>
+</div>
+
+<!-- MAIN TITLE -->
+<div class="main-title">UJIAN SEMESTER ONLINE</div>
+
+<!-- CONTAINER -->
+<div class="container">
+  <h2>Pilih Kelas - Projek IPAS</h2>
+
+  <div class="grid">
+
+    <div class="card">
+      <a href="ipas-kelas-x.html">
+        <img src="ipas.jpeg" alt="Projek IPAS">
+      </a>
+      <p>KELAS X</p>
+    </div>
+
+    <div class="card">
+      <a href="ipas-kelas-xi.html">
+        <img src="ipas.jpeg" alt="Projek IPAS">
+      </a>
+      <p>KELAS XI</p>
+    </div>
+
+    <div class="card">
+      <a href="ipas-kelas-xii.html">
+        <img src="ipas.jpeg" alt="Projek IPAS">
+      </a>
+      <p>KELAS XII</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOMBOL KEMBALI -->
+<div class="back-button-container">
+  <a href="index.html" class="back-button">← Kembali</a>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p>SMKN 1 Simpang Teritip</p>
+  <p>Jl. Raya Pangkalpinang-Muntok, Simpang Teritip, Kec. Simpang Teritip, Kabupaten Bangka Barat, Kepulauan Bangka Belitung 33366</p>
+<p>© 2025 Ujian Online</p>
+</div>
+
+<script>
+  function updateClock() {
+    const now = new Date();
+    const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+    const day = days[now.getDay()];
+    const date = now.getDate();
+    const month = months[now.getMonth()];
+    const year = now.getFullYear();
+
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    const dateString = `${day}, ${date} ${month} ${year}`;
+    const timeString = `${hours}:${minutes}:${seconds}`;
+
+    document.getElementById('current-date').textContent = dateString;
+    document.getElementById('current-time').textContent = timeString;
+  }
+
+  // Update the clock every second
+  setInterval(updateClock, 1000);
+
+  // Initial call to display the clock immediately
+  updateClock();
+
+</script>
+</body>
+</html>
